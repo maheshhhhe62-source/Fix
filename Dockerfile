@@ -11,17 +11,15 @@ WORKDIR /app
 
 COPY . .
 
-# Compile DRX C Tool
+# Compile
 RUN gcc drx.c -o drx -pthread -O3 -s && chmod +x drx
 
-# Virtual Environment Setup
+# Python venv
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Flask & Gunicorn
 RUN /opt/venv/bin/pip install --no-cache-dir flask gunicorn
 
 EXPOSE 8080
 
-# Final Command (Tumhare app.py ke hisaab se)
-CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "1", "app:app"]
+CMD ["sh", "-c", "/opt/venv/bin/gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 app:app"]
