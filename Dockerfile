@@ -22,4 +22,4 @@ RUN /opt/venv/bin/pip install --no-cache-dir flask gunicorn
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "/opt/venv/bin/gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 app:app"]
+CMD ["sh", "-c", "/opt/venv/bin/gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 1 api:app"]
