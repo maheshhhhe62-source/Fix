@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-# System dependencies
+# Install required packages
 RUN apt-get update && apt-get install -y \
     gcc \
     python3 \
@@ -10,20 +10,20 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy all files
+# Copy your exact files
 COPY . .
 
-# Compile C Attack Tool
+# Compile DRX C Tool
 RUN gcc drx.c -o drx -pthread -O3 -s && chmod +x drx
 
-# Setup Python Virtual Environment
+# Setup Virtual Environment
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Flask & Gunicorn
+# Install Flask + Gunicorn
 RUN /opt/venv/bin/pip install --no-cache-dir flask gunicorn
 
 EXPOSE 8080
 
-# Final Start Command
-CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:$PORT", "app:app"]
+# Start Command
+CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "1", "app:app"]
